@@ -1,8 +1,9 @@
 {
   "name": "cubehelix-to-hex",
   "displayName": "Cubehelix to HEX",
+  "publisher": "shushtain",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.97.0"
   },
@@ -18,6 +19,10 @@
   ],
   "activationEvents": [],
   "main": "./extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shushtain/cubehelix-to-hex.git"
+  },
   "contributes": {
     "commands": [
       {
