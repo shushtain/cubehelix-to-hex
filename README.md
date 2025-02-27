@@ -2,6 +2,8 @@
 
 Convert selected color string between Cubehelix and HEX color spaces.
 
+> For more information about the Cubehelix color space, look for [Dave Green's Cubehelix](https://people.phy.cam.ac.uk/dag9/CUBEHELIX/#Paper). The specific implementation of Cubehelix for this extenstion is described below, after the features.
+
 ## Features
 
 There is a single command "Cubehelix ⇄ HEX" which automatically recognizes selected color format (Cubehelix or HEX) and converts it to the opposite color space.
@@ -31,17 +33,3 @@ For example, a button with the background of `(240, 100, 30)` and the text of `(
 ![Example](https://raw.githubusercontent.com/shushtain/cubehelix-to-hex/refs/heads/main/example2.jpg)
 
 I typically set `saturation 110%` for signal (error, warning) colors. The clipping (which leads to contrast mutations) is minimal.
-
-## Known Issues
-
-...
-
-## Release Notes
-
-### 0.0.2
-
-Fixed README.
-
-### 0.0.1
-
-Initial release.

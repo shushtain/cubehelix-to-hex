@@ -1,9 +1,3 @@
-# Change Log
+# Changelog
 
-All notable changes to the "cubehelix-to-hex" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+Please visit <https://github.com/shushtain/cubehelix-to-hex/releases> for the latest updates.
