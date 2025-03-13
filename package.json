@@ -3,7 +3,7 @@
   "displayName": "Cubehelix to HEX",
   "publisher": "shushtain",
   "description": "",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.97.0"
   },

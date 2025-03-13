@@ -1,6 +1,6 @@
 # Cubehelix to HEX
 
-Convert selected color string between Cubehelix and HEX color spaces.
+Convert selected color strings between Cubehelix and HEX color spaces.
 
 > For more information about the Cubehelix color space, look for [Dave Green's Cubehelix](https://people.phy.cam.ac.uk/dag9/CUBEHELIX/#Paper). The specific implementation of Cubehelix for this extenstion is described below, after the features.
 
@@ -10,17 +10,17 @@ There is a single command "Cubehelix ⇄ HEX" which automatically recognizes sel
 
 Valid Cubehelix formats:
 
-- cubehelix(360, 100%, 100%)
-- cubehelix(360, 100, 100)
-- (360, 100%, 100%)
-- (360, 100, 100)
+- `cubehelix(360, 100%, 100%)`
+- `cubehelix(360, 100, 100)`
+- `(360, 100%, 100%)`
+- `(360, 100, 100)`
 
 Valid HEX formats:
 
-- #FFFFFF
-- #ffffff
-- #FFF
-- #fff
+- `#FFFFFF`
+- `#ffffff`
+- `#FFF`
+- `#fff`
 
 ## Cubehelix?
 
@@ -28,7 +28,7 @@ Cubehelix colors are described by `hue: 0-360`, `saturation: 0-100+`, `lightness
 
 ![Color spaces](https://raw.githubusercontent.com/shushtain/cubehelix-to-hex/refs/heads/main/example1.jpg)
 
-For example, a button with the background of `(240, 100, 30)` and the text of `(240, 100, 90)` will measure to the same color accessibility contrast as a button with the background of `(160, 50, 30)` and the text of `(160, 100, 90)`.
+For example, a button with the background of `(240, 100%, 30%)` and the text of `(240, 100%, 90%)` will measure to the same color accessibility contrast as a button with the background of `(160, 50%, 30%)` and the text of `(160, 100%, 90%)`.
 
 ![Example](https://raw.githubusercontent.com/shushtain/cubehelix-to-hex/refs/heads/main/example2.jpg)
 
