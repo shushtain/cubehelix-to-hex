@@ -8,19 +8,28 @@ Convert selected color strings between Cubehelix and HEX color spaces.
 
 There is a single command "Cubehelix ⇄ HEX" which automatically recognizes selected color format (Cubehelix or HEX) and converts it to the opposite color space.
 
-Valid Cubehelix formats:
-
-- `cubehelix(360, 100%, 100%)`
-- `cubehelix(360, 100, 100)`
-- `(360, 100%, 100%)`
-- `(360, 100, 100)`
-
-Valid HEX formats:
+### Valid HEX formats
 
 - `#FFFFFF`
 - `#ffffff`
 - `#FFF`
 - `#fff`
+
+### Valid Cubehelix formats
+
+The extension with recognize any three positive numbers separated by commas and/or spaces. You can add `%` to the numbers, group them with parentheses, and name the group up to your liking. All drag is valid (except for alphas):
+
+- `123 25.3 80`
+- `50,120%,60%`
+- `(355, 30%, 20%)`
+- `cubehelix(0, 0%, 5%)`
+- `hsl(25, 50%, 80%)`
+
+Cubehelix specification doesn't care if the numbers are crazy, so better stick to something close to:
+
+- `hue` : `0-360`
+- `saturation` : `0-100+`
+- `lightness` : `0-100`
 
 ## Cubehelix?
 

@@ -2,8 +2,8 @@
   "name": "cubehelix-to-hex",
   "displayName": "Cubehelix to HEX",
   "publisher": "shushtain",
-  "description": "",
-  "version": "0.1.0",
+  "description": "Cubehelix to HEX converter.",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.97.0"
   },

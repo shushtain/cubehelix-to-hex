@@ -1,36 +1,57 @@
 const vscode = require("vscode");
 
+const A = -0.14861;
+const B = 1.78277;
+const C = -0.29227;
+const D = -0.90649;
+const E = 1.97294;
+const ED = E * D;
+const EB = E * B;
+const BC_DA = B * C - D * A;
+
+const PATTERN_CUBEHELIX =
+  /([.]?\d+(?:[.]\d*)?%?\s*[,\s]\s*){2}[.]?\d+(?:[.]\d*)?%?/;
+const PATTERN_HEX = /#([0-9a-f]{3}){1,2}/i;
+
 /**
  * @param {vscode.ExtensionContext} context
  */
-
 function activate(context) {
   // * Cubehelix to HEX
   const cubeHex = vscode.commands.registerCommand(
     "cubehelix-to-hex.cubeHex",
     function () {
       const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        const document = editor.document;
-        const selections = editor.selections;
+      if (!editor) {
+        return;
+      }
 
-        editor.edit((editBuilder) => {
-          selections.forEach((selection) => {
-            const selectedText = document.getText(selection).trim();
-            const patternCubehelix =
-              /(cubehelix)?\s*\(\s*[.]?\d*[.]?\d*\s*%?\s*,\s*[.]?\d*[.]?\d*\s*%?\s*,\s*[.]?\d*[.]?\d*\s*%?\s*\)/;
-            const patternHex = /#[0-9a-fA-F]{3,6}/;
+      const document = editor.document;
+      const selections = editor.selections;
 
-            if (selectedText.search(patternCubehelix) >= 0) {
+      editor.edit((editBuilder) => {
+        selections.forEach((selection) => {
+          let selectedText = document.getText(selection).trim();
+
+          if (PATTERN_CUBEHELIX.test(selectedText)) {
+            try {
               const hex = cubehelixToHex(selectedText);
               editBuilder.replace(selection, hex);
-            } else if (selectedText.search(patternHex) >= 0) {
+            } catch (error) {
+              vscode.window.showErrorMessage(error.message);
+            }
+          } else if (PATTERN_HEX.test(selectedText)) {
+            try {
               const cubehelix = hexToCubehelix(selectedText);
               editBuilder.replace(selection, cubehelix);
+            } catch (error) {
+              vscode.window.showErrorMessage(error.message);
             }
-          });
+          } else {
+            vscode.window.showErrorMessage("No valid color values.");
+          }
         });
-      }
+      });
     }
   );
 
@@ -38,21 +59,20 @@ function activate(context) {
 }
 
 function cubehelixToHex(cubehelixString) {
-  const A = -0.14861;
-  const B = 1.78277;
-  const C = -0.29227;
-  const D = -0.90649;
-  const E = 1.97294;
+  let clr_in = cubehelixString.replace(/[^\d,.\s]/g, "").trim();
+  let coords = clr_in.split(/[,\s]+/);
 
-  let clr_in = cubehelixString.replace(/[a-zA-Z()%]/g, "");
-  let coords = clr_in.split(",");
-  for (let i = 0; i < coords.length; i++) {
-    coords[i] = parseFloat(coords[i].trim());
+  if (coords.length !== 3) {
+    throw new Error("Invalid Cubehelix format.");
   }
 
-  let h = coords[0];
-  let s = coords[1] / 100;
-  let l = coords[2] / 100;
+  let h = parseFloat(coords[0].trim());
+  let s = parseFloat(coords[1].trim()) / 100;
+  let l = parseFloat(coords[2].trim()) / 100;
+
+  if (isNaN(h) || isNaN(s) || isNaN(l)) {
+    throw new Error("Invalid Cubehelix values.");
+  }
 
   h = ((h / 120) % 3) + 1;
   h = 2 * Math.PI * (h / 3 + 1);
@@ -87,49 +107,36 @@ function cubehelixToHex(cubehelixString) {
 }
 
 function hexToCubehelix(hexString) {
-  const A = -0.14861;
-  const B = 1.78277;
-  const C = -0.29227;
-  const D = -0.90649;
-  const E = 1.97294;
-  const ED = E * D;
-  const EB = E * B;
-  const BC_DA = B * C - D * A;
+  if (!PATTERN_HEX.test(hexString)) {
+    throw new Error("Invalid HEX format.");
+  }
 
-  let clr_in = hexString.replace("#", "");
-  let coords = [];
+  const hex = hexString.replace("#", "");
 
-  if (clr_in.length === 3) {
-    coords.push(clr_in.charAt(0) + clr_in.charAt(0));
-    coords.push(clr_in.charAt(1) + clr_in.charAt(1));
-    coords.push(clr_in.charAt(2) + clr_in.charAt(2));
+  let r, g, b;
+  if (hex.length === 3) {
+    r = parseInt(hex.charAt(0).repeat(2), 16) / 255;
+    g = parseInt(hex.charAt(1).repeat(2), 16) / 255;
+    b = parseInt(hex.charAt(2).repeat(2), 16) / 255;
   } else {
-    coords.push(clr_in.charAt(0) + clr_in.charAt(1));
-    coords.push(clr_in.charAt(2) + clr_in.charAt(3));
-    coords.push(clr_in.charAt(4) + clr_in.charAt(5));
+    r = parseInt(hex.substring(0, 2), 16) / 255;
+    g = parseInt(hex.substring(2, 4), 16) / 255;
+    b = parseInt(hex.substring(4, 6), 16) / 255;
   }
-
-  for (let i = 0; i < coords.length; i++) {
-    coords[i] = parseInt(coords[i], 16) / 255;
-  }
-
-  let r = coords[0];
-  let g = coords[1];
-  let b = coords[2];
 
   let l = (BC_DA * b + ED * r - EB * g) / (BC_DA + ED - EB);
   let bl = b - l;
   let k = (E * (g - l) - C * bl) / D;
 
   let s;
-  if (l == 0 || l == 1) {
+  if (l === 0 || l === 1) {
     s = 0;
   } else {
     s = Math.sqrt(k * k + bl * bl) / (E * l * (1 - l));
   }
 
   let h;
-  if (s == 0) {
+  if (s === 0) {
     h = 0;
   } else {
     h = Math.atan2(k, bl) * (180 / Math.PI) - 120;
