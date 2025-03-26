@@ -59,23 +59,51 @@ function activate(context) {
 }
 
 function cubehelixToHex(cubehelixString) {
-  let clr_in = cubehelixString.replace(/[^\d,.\s]/g, "").trim();
+  let clr_in = cubehelixString.replace(/[^\d,.%\s]/g, "").trim();
   let coords = clr_in.split(/[,\s]+/);
 
   if (coords.length !== 3) {
     throw new Error("Invalid Cubehelix format.");
   }
 
-  let h = parseFloat(coords[0].trim());
-  let s = parseFloat(coords[1].trim()) / 100;
-  let l = parseFloat(coords[2].trim()) / 100;
+  let h_raw = coords[0];
+  let s_raw = coords[1];
+  let l_raw = coords[2];
+
+  let h = parseFloat(h_raw.replace("%", "").trim());
+
+  let s;
+  if (s_raw.includes("%")) {
+    s = parseFloat(s_raw.replace("%", "").trim()) / 100;
+  } else {
+    s = parseFloat(s_raw.trim());
+  }
+
+  let l;
+  if (l_raw.includes("%")) {
+    l = parseFloat(l_raw.replace("%", "").trim()) / 100;
+  } else {
+    l = parseFloat(l_raw.trim());
+  }
 
   if (isNaN(h) || isNaN(s) || isNaN(l)) {
     throw new Error("Invalid Cubehelix values.");
   }
 
-  h = ((h / 120) % 3) + 1;
-  h = 2 * Math.PI * (h / 3 + 1);
+  // lightness limits
+  if (l <= 0) {
+    return "#000000";
+  }
+  if (l >= 1) {
+    return "#FFFFFF";
+  }
+
+  h = (Math.PI * (h + 120)) / 180;
+
+  // saturation limits
+  if (s <= 0) {
+    h = 0;
+  }
 
   let a = s * l * (1 - l);
 
@@ -150,6 +178,10 @@ function hexToCubehelix(hexString) {
   s = Math.round(s * 100);
   l = Math.round(l * 100);
 
+  if (h === 360) {
+    h = 0;
+  }
+
   return `cubehelix(${h}, ${s}%, ${l}%)`;
 }
 
@@ -159,4 +191,7 @@ function deactivate() {}
 module.exports = {
   activate,
   deactivate,
+  cubehelixToHex, // test
+  hexToCubehelix, // test
+  PATTERN_HEX, // test
 };
